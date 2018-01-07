@@ -68,7 +68,7 @@ extension MTHomeViewController:UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = colView?.dequeueReusableCell(withReuseIdentifier: "Ahihi", for: indexPath) as? MTCollectionViewCell else { return UICollectionViewCell() }
-        cell.configure(vm.getPreviewImage(index: indexPath.row))
+        cell.configure(vm.getPreviewPhotoURL(index: indexPath.row))
         return cell
     }
 }
@@ -77,7 +77,8 @@ extension MTHomeViewController:UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let imageVC = storyBoard.instantiateViewController(withIdentifier: "MTImageViewController") as? MTImageViewController
-        imageVC?.fullImage = vm.getFullImage(index: indexPath.row)
+        imageVC?.photo = vm.getPhoto(index: indexPath.row)
+        imageVC?.titleA = barSearch.text
         present(imageVC!, animated: true, completion: nil)
     }
 }

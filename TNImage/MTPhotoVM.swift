@@ -34,13 +34,18 @@ class MTPhotoVM {
         DataService.photoService.photos(keywork, request: rq)
     }
     
-    public func getPreviewImage(index:Int)->String{
+    public func getPreviewPhotoURL(index:Int)->String{
         let photoPreview = gallery.items[index].previewURL
         return photoPreview
     }
     
-    public func getFullImage(index:Int)->String{
+    public func getFullPhotoURL(index:Int)->String{
         let photoFull = gallery.items[index].webformatURL
+        return photoFull
+    }
+    
+    public func getPhoto(index:Int)->MTPhotoModel{
+        let photoFull = gallery.items[index]
         return photoFull
     }
 }

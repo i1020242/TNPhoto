@@ -11,12 +11,12 @@ import ImageSlideshow
 
 class MTImageViewController: UIViewController {
     @IBOutlet var imageSlideShow: ImageSlideshow!
-    var fullImage:String?
-    
+    var photo:MTPhotoModel?
+    var titleA:String?
     @IBOutlet weak var imageView: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let fullImage = fullImage, let source = AlamofireSource(urlString: fullImage) {
+        if let source = AlamofireSource(urlString: (photo?.webformatURL)!) {
             imageSlideShow.activityIndicator = DefaultActivityIndicator()
             imageSlideShow.setImageInputs([source])
             imageSlideShow.backgroundColor = UIColor.init(red: 236, green: 236, blue: 236, alpha: 0.5)
@@ -54,27 +54,6 @@ class MTImageViewController: UIViewController {
         FileManager.default.createFile(atPath: imagePath, contents: data, attributes: nil)
         let imageAhihi = UIImage(contentsOfFile: imagePath)
         print(imageAhihi!)
-        //test coredata
-        DataService.coredataService.saveName(givenName: imagePath)
-        DataService.coredataService.fetchAndPrintEachPerson { (arr) in
-            
-            let pathCoreData = arr.last
-            print(pathCoreData?.name)
-            print(pathCoreData?.urlFull)
-            print(pathCoreData?.urlPreview)
-            
-            if FileManager.default.fileExists(atPath: (pathCoreData?.urlPreview)!) {
-                let imageCoreData = UIImage(contentsOfFile: (pathCoreData?.urlPreview)!)
-                if let imageCoreData = imageCoreData {
-                    print(imageCoreData)
-                    imageView.image = imageCoreData
-                    
-                }
-                
-            } else {
-                print("File does not exist")
-            }
-        }
     }
     @IBAction func handleSave(_ sender: Any) {
         
@@ -87,13 +66,21 @@ class MTImageViewController: UIViewController {
         
         // 3. Grab the value from the text field, and print it when the user clicks OK.
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] (_) in
-            let imgView = UIImageView()
+            //let imgView = UIImageView()
 //            AlamofireSource(urlString: (self?.arrTest![3])!)?.load(to: imgView) { (img) in
 //                if let imageView:UIImage = img {
 //                    self?.saveImage(imgSave: imageView)
 //                }
 //                
 //            }
+            DataService.coredataService.savePhoto(title: (self?.titleA!)!, previewImage: (self?.photo?.previewURL)!, fullImage: (self?.photo?.webformatURL)!)
+//            DataService.coredataService.fetchAndPrintEachPerson { (arr) in
+//                print(arr.count)
+//                let pathCoreData:Image = arr.last!
+//                print(pathCoreData.name!)
+//                print(pathCoreData.urlFull!)
+//                print(pathCoreData.urlPreview!)
+            //}
         }))
         
         // 4. Present the alert.

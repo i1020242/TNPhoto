@@ -19,6 +19,6 @@ extension Image {
 
     @NSManaged public var urlFull: String?
     @NSManaged public var urlPreview: String?
-    @NSManaged public var name: String?
+    @NSManaged public var title: String?
 
 }

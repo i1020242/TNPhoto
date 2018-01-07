@@ -10,8 +10,6 @@
 		216CDE451FFE69C5000B89DB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 216CDE441FFE69C5000B89DB /* CoreData.framework */; };
 		216CDE4C1FFE6C56000B89DB /* MTCoredataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216CDE4B1FFE6C56000B89DB /* MTCoredataService.swift */; };
 		216CDE4D1FFE6D84000B89DB /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216CDE491FFE6B2E000B89DB /* DataService.swift */; };
-		216CDE681FFFC994000B89DB /* Image+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216CDE621FFFC5B6000B89DB /* Image+CoreDataClass.swift */; };
-		216CDE691FFFC999000B89DB /* Image+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216CDE631FFFC5B6000B89DB /* Image+CoreDataProperties.swift */; };
 		216CDE6B2000DEBA000B89DB /* MTExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216CDE6A2000DEBA000B89DB /* MTExtension.swift */; };
 		216CDE6D2000E623000B89DB /* HttpUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216CDE6C2000E623000B89DB /* HttpUtility.swift */; };
 		216CDE792000FA2D000B89DB /* MTBaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216CDE782000FA2D000B89DB /* MTBaseService.swift */; };
@@ -24,6 +22,7 @@
 		21C18A931FF9CD42003B6A99 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C18A921FF9CD42003B6A99 /* Utils.swift */; };
 		21C18A981FFA16A3003B6A99 /* MTImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C18A971FFA16A3003B6A99 /* MTImageViewController.swift */; };
 		21E680EC2001CC0000404AD6 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E680EB2001CC0000404AD6 /* BaseViewController.swift */; };
+		21E680F0200248ED00404AD6 /* ImageData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 216CDE461FFE6A29000B89DB /* ImageData.xcdatamodeld */; };
 		21FBB0A11FF2ACB50085D383 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FBB0A01FF2ACB50085D383 /* AppDelegate.swift */; };
 		21FBB0A31FF2ACB50085D383 /* MTHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FBB0A21FF2ACB50085D383 /* MTHomeViewController.swift */; };
 		21FBB0A61FF2ACB50085D383 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21FBB0A41FF2ACB50085D383 /* Main.storyboard */; };
@@ -319,15 +318,14 @@
 			files = (
 				216CDE7F2000FCA1000B89DB /* MTPhotoModel.swift in Sources */,
 				216CDE6B2000DEBA000B89DB /* MTExtension.swift in Sources */,
-				216CDE691FFFC999000B89DB /* Image+CoreDataProperties.swift in Sources */,
 				216CDE7D2000FBDC000B89DB /* MTBaseModel.swift in Sources */,
 				216CDE4D1FFE6D84000B89DB /* DataService.swift in Sources */,
 				21E680EC2001CC0000404AD6 /* BaseViewController.swift in Sources */,
 				216CDE4C1FFE6C56000B89DB /* MTCoredataService.swift in Sources */,
 				21FBB0A31FF2ACB50085D383 /* MTHomeViewController.swift in Sources */,
-				216CDE681FFFC994000B89DB /* Image+CoreDataClass.swift in Sources */,
 				21FBB0A11FF2ACB50085D383 /* AppDelegate.swift in Sources */,
 				21C18A911FF91A6B003B6A99 /* MTCollectionViewCell.swift in Sources */,
+				21E680F0200248ED00404AD6 /* ImageData.xcdatamodeld in Sources */,
 				216CDE792000FA2D000B89DB /* MTBaseService.swift in Sources */,
 				216CDE812000FE5A000B89DB /* MTPhotoService.swift in Sources */,
 				21C18A931FF9CD42003B6A99 /* Utils.swift in Sources */,

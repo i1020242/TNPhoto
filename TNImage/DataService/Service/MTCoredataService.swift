@@ -50,12 +50,12 @@ class MTCoredataService:NSObject {
         return managedObjectContext
     }()
     
-    func saveName(givenName:String) {
+    func savePhoto(title:String, previewImage:String, fullImage:String) {
         let entity =  NSEntityDescription.entity(forEntityName: "Image", in:managedObjectContext!)
         let item = NSManagedObject(entity: entity!, insertInto:managedObjectContext!)
-        item.setValue(givenName, forKey: "urlPreview")
-        item.setValue("ahihi", forKey: "name")
-        item.setValue("previewImage", forKey: "urlFull")
+        item.setValue(previewImage, forKey: "urlPreview")
+        item.setValue(title, forKey: "title")
+        item.setValue(fullImage, forKey: "urlFull")
         do {
             try managedObjectContext!.save()
         } catch _ {
@@ -65,6 +65,8 @@ class MTCoredataService:NSObject {
     
     func fetchAndPrintEachPerson(completionHandler:(_ ahihi:[Image])->Void) {
         let fetchRequest = NSFetchRequest<Image>(entityName: "Image")
+        fetchRequest.predicate = NSPredicate(format: "urlPreview CONTAINS[cd] %@", "alo")
+        
         do {
             let fetchedResults = try managedObjectContext!.fetch(fetchRequest)
             var arrTemp:[Image] = []
