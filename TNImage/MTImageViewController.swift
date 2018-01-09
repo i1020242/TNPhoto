@@ -7,36 +7,50 @@
 //
 
 import UIKit
-import ImageSlideshow
+import CoreData
 
 class MTImageViewController: UIViewController {
-    @IBOutlet var imageSlideShow: ImageSlideshow!
-    var photo:MTPhotoModel?
-    var titleA:String?
+    @IBOutlet weak var btnSave: UIButton!
     @IBOutlet weak var imageView: UIImageView!
+    
+    var photo:MTPhotoModel?
+    var photo_core:Image?
+    var titleA:String?
+    var vm:MTPhotoVM?
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let source = AlamofireSource(urlString: (photo?.webformatURL)!) {
-            imageSlideShow.activityIndicator = DefaultActivityIndicator()
-            imageSlideShow.setImageInputs([source])
-            imageSlideShow.backgroundColor = UIColor.init(red: 236, green: 236, blue: 236, alpha: 0.5)
+        imageView.contentMode = .scaleAspectFit
+        if Connection.isInternetAvailable() {
+            ImageLoader.sharedLoader.imageForUrl(urlString: (photo?.webformatURL)!) { (imageTest, str) in
+                self.imageView.image = imageTest
+            }
+            btnSave.isHidden = false
+        } else {
+            if let image = photo_core?.urlFull {
+                self.imageView.image = UIImage(contentsOfFile: image)
+            }
+            ///btn
+            //btnSave.isHidden = true
         }
+        
+        
     }
+    
     @IBAction func handleClose(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
 
     //save local Image
-    func saveImage(imgSave:UIImage){
+    func saveImage(){
         let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        // Get the Document directory path
+        /// Get the Document directory path
         let documentDirectorPath:String = paths[0]
-        // Create a new path for the new images folder
+        /// Create a new path for the new images folder
         var imagesDirectoryPath:String!
         imagesDirectoryPath = documentDirectorPath.appending("/ImagePicker")
         var objcBool:ObjCBool = true
         let isExist = FileManager.default.fileExists(atPath: imagesDirectoryPath, isDirectory: &objcBool)
-        // If the folder with the given path doesn't exist already, create it
+        /// If the folder with the given path doesn't exist already, create it
         if isExist == false{
             do{
                 try FileManager.default.createDirectory(atPath: imagesDirectoryPath, withIntermediateDirectories: true, attributes: nil)
@@ -44,51 +58,91 @@ class MTImageViewController: UIViewController {
                 print("Something went wrong while creating a new folder")
             }
         }
-        //save Image to
-        var imagePath = NSDate().description
-        imagePath = imagePath.replacingOccurrences(of: " ", with: "")
-        imagePath = imagesDirectoryPath.appending("/\(imagePath).png")
-        print("Path \(imagePath)")
         
-        let data = UIImagePNGRepresentation(imgSave)
-        FileManager.default.createFile(atPath: imagePath, contents: data, attributes: nil)
-        let imageAhihi = UIImage(contentsOfFile: imagePath)
-        print(imageAhihi!)
-    }
-    @IBAction func handleSave(_ sender: Any) {
-        
-        let alert = UIAlertController(title: "Some Title", message: "Enter a text", preferredStyle: .alert)
-        
-        //2. Add the text field. You can configure it however you need.
-        alert.addTextField { (textField) in
-            textField.text = "Some default text"
+        let currentDay = getCurrentDay()
+        let currentDayA = currentDay.replacingOccurrences(of: " ", with: "")
+        let imagePathFull = imagesDirectoryPath.appending("/\(currentDayA).png")
+        let imagePathPreview = imagesDirectoryPath.appending("/\(currentDayA)_P.png")
+        print(imagePathPreview)
+        if let imageView = self.imageView.image{
+            let imageData = UIImagePNGRepresentation(imageView)
+            print(imageData!)
+            FileManager.default.createFile(atPath: imagePathFull, contents: imageData, attributes: nil)
+            FileManager.default.createFile(atPath: imagePathPreview, contents: imageData, attributes: nil)
+            DataService.coredataService.savePhoto(title: (self.titleA!), previewImage: imagePathPreview, fullImage: imagePathFull)
         }
         
-        // 3. Grab the value from the text field, and print it when the user clicks OK.
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] (_) in
-            //let imgView = UIImageView()
-//            AlamofireSource(urlString: (self?.arrTest![3])!)?.load(to: imgView) { (img) in
-//                if let imageView:UIImage = img {
-//                    self?.saveImage(imgSave: imageView)
-//                }
-//                
-//            }
-            DataService.coredataService.savePhoto(title: (self?.titleA!)!, previewImage: (self?.photo?.previewURL)!, fullImage: (self?.photo?.webformatURL)!)
-//            DataService.coredataService.fetchAndPrintEachPerson { (arr) in
-//                print(arr.count)
-//                let pathCoreData:Image = arr.last!
-//                print(pathCoreData.name!)
-//                print(pathCoreData.urlFull!)
-//                print(pathCoreData.urlPreview!)
-            //}
-        }))
-        
-        // 4. Present the alert.
-        self.present(alert, animated: true, completion: nil)
-        
-        
+    }
+    @IBAction func handleSave(_ sender: Any) {
+        if Connection.isInternetAvailable(){
+            let alert = UIAlertController(title: "Save", message: "Do you save fucking image?", preferredStyle: .alert)
+            alert.addTextField { (textField) in
+                textField.text = self.titleA
+            }
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] (_) in
+                self?.saveImage()
+            }))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            ///handle delete
+            vm?.deletePhoto(photo: photo_core!)
+            dismiss(animated: true, completion: nil)
+        }
     }
     
+    func getCurrentDay() -> String{
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy HH:mm:ss"
+        let result = formatter.string(from: date)
+        return result
+    }
+}
+
+class ImageLoader {
     
+    let cache = NSCache<NSString, AnyObject>()
     
+    class var sharedLoader : ImageLoader {
+        struct Static {
+            static let instance : ImageLoader = ImageLoader()
+        }
+        return Static.instance
+    }
+    
+    func imageForUrl(urlString: String, completionHandler: @escaping (_ image: UIImage?, _ url: String) -> ()) {
+        
+        DispatchQueue.global(qos: .background).async {
+            
+            let data: NSData? = self.cache.object(forKey: urlString as NSString) as? NSData
+            
+            if let goodData = data {
+                let image = UIImage(data: goodData as Data)
+                DispatchQueue.main.async {
+                    completionHandler(image, urlString)
+                }
+                return
+            }
+            
+            let session = URLSession.shared
+            let request = URLRequest(url: URL(string: urlString)!);
+            
+            session.dataTask(with: request) { data, response, error in
+                
+                if (error != nil) {
+                    completionHandler(nil, urlString)
+                    return
+                }
+                
+                if let data = data{
+                    let image = UIImage(data: data)
+                    self.cache.setObject(data as AnyObject, forKey: urlString as NSString)
+                    DispatchQueue.main.async {
+                        completionHandler(image, urlString)
+                    }
+                }
+                }.resume()
+            
+        }
+    }
 }

@@ -69,7 +69,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qQT-H5-Twl" customClass="ImageSlideshow" customModule="ImageSlideshow">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qQT-H5-Twl" customClass="UIImageView">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
@@ -79,7 +79,7 @@
                                     <constraint firstAttribute="width" constant="30" id="wbD-NF-ead"/>
                                     <constraint firstAttribute="height" constant="30" id="wj3-lE-D9M"/>
                                 </constraints>
-                                <state key="normal" image="ic_close">
+                                <state key="normal" image="ic_back">
                                     <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>
@@ -99,10 +99,6 @@
                                     <action selector="handleSave:" destination="KHa-u6-miD" eventType="touchUpInside" id="fvK-0a-Cck"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fUZ-iR-fSw">
-                                <rect key="frame" x="16" y="530" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -118,8 +114,8 @@
                         <viewLayoutGuide key="safeArea" id="eTL-ER-hdL"/>
                     </view>
                     <connections>
-                        <outlet property="imageSlideShow" destination="qQT-H5-Twl" id="XcK-ux-7aE"/>
-                        <outlet property="imageView" destination="fUZ-iR-fSw" id="Hjg-Rh-zrr"/>
+                        <outlet property="btnSave" destination="O8z-ie-sF8" id="72r-34-UTx"/>
+                        <outlet property="imageView" destination="qQT-H5-Twl" id="lVH-TL-f3f"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bu1-5c-Q1C" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -128,7 +124,7 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ic_close" width="30" height="30"/>
+        <image name="ic_back" width="30" height="30"/>
         <image name="ic_save" width="30" height="30"/>
     </resources>
 </document>

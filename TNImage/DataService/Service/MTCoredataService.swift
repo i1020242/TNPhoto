@@ -63,10 +63,19 @@ class MTCoredataService:NSObject {
         }
     }
     
-    func fetchAndPrintEachPerson(completionHandler:(_ ahihi:[Image])->Void) {
+    func deletePhoto(photo:Image, completionHandler:()->Void){
+        managedObjectContext?.delete(photo)
+        do {
+            try managedObjectContext!.save()
+            completionHandler()
+        } catch _ {
+            print("Something went wrong.")
+        }
+    }
+    
+    func fetchAndPrintEachPerson(keywork:String, completionHandler:(_ ahihi:[Image])->Void) {
         let fetchRequest = NSFetchRequest<Image>(entityName: "Image")
-        fetchRequest.predicate = NSPredicate(format: "urlPreview CONTAINS[cd] %@", "alo")
-        
+        fetchRequest.predicate = NSPredicate(format: "title contains[c] %@", keywork)
         do {
             let fetchedResults = try managedObjectContext!.fetch(fetchRequest)
             var arrTemp:[Image] = []
@@ -75,7 +84,6 @@ class MTCoredataService:NSObject {
             }
             completionHandler(arrTemp)
         } catch let error as NSError {
-            // something went wrong, print the error.
             print(error.description)
         }
     }

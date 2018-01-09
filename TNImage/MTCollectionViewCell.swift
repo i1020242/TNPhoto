@@ -11,11 +11,11 @@ import Alamofire
 import AlamofireImage
 
 class MTCollectionViewCell: UICollectionViewCell {
-    
+    let imagePhoto = UIImageView()
     func configure(_ url:String) {
-        showActivityIndicator()
+        
         ///image
-        let imagePhoto = UIImageView()
+        prepareForReuse()
         imagePhoto.contentMode = .scaleToFill
         addSubview(imagePhoto)
         imagePhoto.mas_makeConstraints({ (make) in
@@ -25,12 +25,23 @@ class MTCollectionViewCell: UICollectionViewCell {
             make?.bottom.equalTo()(mas_bottom)?.with().offset()(0)
             return()
         })
-        
-        Alamofire.request(url).responseImage { [weak self] response in
-            self?.stopActivityIndicator()
-            if let image = response.result.value {
-                imagePhoto.image = image
+        if Connection.isInternetAvailable(){
+            showActivityIndicator()
+            Alamofire.request(url).responseImage { [weak self] response in
+                self?.stopActivityIndicator()
+                if let image = response.result.value {
+                    self?.imagePhoto.image = image
+                }
             }
+        } else {
+            do {
+                let fileURL = URL(fileURLWithPath: url)
+                let imageData = try Data(contentsOf: fileURL)
+                imagePhoto.image = UIImage(data: imageData)
+            } catch {
+                print("Error loading image : \(error)")
+            }
+            
         }
     }
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
@@ -48,5 +59,10 @@ class MTCollectionViewCell: UICollectionViewCell {
     func stopActivityIndicator(){
         activityIndicator.stopAnimating()
         UIApplication.shared.endIgnoringInteractionEvents()
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imagePhoto.image = nil
     }
 }

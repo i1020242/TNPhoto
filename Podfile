@@ -6,6 +6,5 @@ target 'TNImage' do
 pod 'Alamofire', '~> 4.5'
 pod 'AlamofireImage'
 pod 'Masonry'
-pod 'ImageSlideshow'
-pod "ImageSlideshow/Alamofire"
+pod 'ImageLoaderSwift', '~> 0.12'
 end
