@@ -24,16 +24,15 @@ class MTImageViewController: UIViewController {
             ImageLoader.sharedLoader.imageForUrl(urlString: (photo?.webformatURL)!) { (imageTest, str) in
                 self.imageView.image = imageTest
             }
-            btnSave.isHidden = false
+            ///btn
+            btnSave.setImage(UIImage(named: "ic_save"), for: .normal)
         } else {
             if let image = photo_core?.urlFull {
                 self.imageView.image = UIImage(contentsOfFile: image)
             }
             ///btn
-            //btnSave.isHidden = true
+            btnSave.setImage(UIImage(named: "ic_delete"), for: .normal)
         }
-        
-        
     }
     
     @IBAction func handleClose(_ sender: Any) {
@@ -71,22 +70,32 @@ class MTImageViewController: UIViewController {
             FileManager.default.createFile(atPath: imagePathPreview, contents: imageData, attributes: nil)
             DataService.coredataService.savePhoto(title: (self.titleA!), previewImage: imagePathPreview, fullImage: imagePathFull)
         }
-        
     }
     @IBAction func handleSave(_ sender: Any) {
         if Connection.isInternetAvailable(){
-            let alert = UIAlertController(title: "Save", message: "Do you save fucking image?", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Save", message: "Do you want to save fucking image?", preferredStyle: .alert)
             alert.addTextField { (textField) in
                 textField.text = self.titleA
             }
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] (_) in
+                self?.titleA = alert.textFields?.first?.text
                 self?.saveImage()
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { [weak self] (_) in
             }))
             self.present(alert, animated: true, completion: nil)
         } else {
             ///handle delete
-            vm?.deletePhoto(photo: photo_core!)
-            dismiss(animated: true, completion: nil)
+            let alert = UIAlertController(title: "Delete", message: "Do you want to delete fucking image?", preferredStyle: .alert)
+            
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak self] (_) in
+                self?.vm?.deletePhoto(photo: (self?.photo_core!)!)
+                self?.dismiss(animated: true, completion: nil)
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { [weak self] (_) in
+            }))
+            self.present(alert, animated: true, completion: nil)
+            
         }
     }
     
